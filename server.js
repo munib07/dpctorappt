@@ -8,7 +8,7 @@ const connectDB = require("./config/db.js");
 dotenv.config();
 
 //mongodb connection
-connectDB();
+//connectDB();
 
 //rest object
 const app = express();
