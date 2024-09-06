@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const appointmentSchema = new mongoose.schema(
+const appointmentSchema = new mongoose.Schema(
   {
     userId: {
       type: String,
@@ -37,4 +37,4 @@ const appointmentSchema = new mongoose.schema(
 
 const appointmentModel = mongoose.model("appointments", appointmentSchema);
 
-export default appointmentModel;
+module.exports = appointmentModel;

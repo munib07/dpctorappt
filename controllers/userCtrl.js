@@ -7,15 +7,15 @@ const moment = require("moment");
 //register callback
 const registerController = async (req, res) => {
   try {
-    const exisitingUser = await findOne({ email: req.body.email });
+    const exisitingUser = await userModel.findOne({ email: req.body.email });
     if (exisitingUser) {
       return res
         .status(200)
         .send({ message: "User Already Exist", success: false });
     }
     const password = req.body.password;
-    const salt = await genSalt(10);
-    const hashedPassword = await hash(password, salt);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
     req.body.password = hashedPassword;
     const newUser = new userModel(req.body);
     await newUser.save();
@@ -32,19 +32,19 @@ const registerController = async (req, res) => {
 // login callback
 const loginController = async (req, res) => {
   try {
-    const user = await findOne({ email: req.body.email });
+    const user = await userModel.findOne({ email: req.body.email });
     if (!user) {
       return res
         .status(200)
         .send({ message: "user not found", success: false });
     }
-    const isMatch = await compare(req.body.password, user.password);
+    const isMatch = await bcrypt.compare(req.body.password, user.password);
     if (!isMatch) {
       return res
         .status(200)
         .send({ message: "Invlid EMail or Password", success: false });
     }
-    const token = sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
     res.status(200).send({ message: "Login Success", success: true, token });
@@ -56,7 +56,7 @@ const loginController = async (req, res) => {
 
 const authController = async (req, res) => {
   try {
-    const user = await findById({ _id: req.body.userId });
+    const user = await userModel.findById({ _id: req.body.userId });
     user.password = undefined;
     if (!user) {
       return res.status(200).send({
@@ -84,7 +84,7 @@ const applyDoctorController = async (req, res) => {
   try {
     const newDoctor = await doctorModel({ ...req.body, status: "pending" });
     await newDoctor.save();
-    const adminUser = await findOne({ isAdmin: true });
+    const adminUser = await userModel.findOne({ isAdmin: true });
     const notifcation = adminUser.notifcation;
     notifcation.push({
       type: "apply-doctor-request",
@@ -95,7 +95,7 @@ const applyDoctorController = async (req, res) => {
         onClickPath: "/admin/docotrs",
       },
     });
-    await findByIdAndUpdate(adminUser._id, { notifcation });
+    await userModel.findByIdAndUpdate(adminUser._id, { notifcation });
     res.status(201).send({
       success: true,
       message: "Doctor Account Applied SUccessfully",
@@ -113,7 +113,7 @@ const applyDoctorController = async (req, res) => {
 //notification ctrl
 const getAllNotificationController = async (req, res) => {
   try {
-    const user = await findOne({ _id: req.body.userId });
+    const user = await userModel.findOne({ _id: req.body.userId });
     const seennotification = user.seennotification;
     const notifcation = user.notifcation;
     seennotification.push(...notifcation);
@@ -138,7 +138,7 @@ const getAllNotificationController = async (req, res) => {
 // delete notifications
 const deleteAllNotificationController = async (req, res) => {
   try {
-    const user = await findOne({ _id: req.body.userId });
+    const user = await userModel.findOne({ _id: req.body.userId });
     user.notifcation = [];
     user.seennotification = [];
     const updatedUser = await user.save();
@@ -161,7 +161,7 @@ const deleteAllNotificationController = async (req, res) => {
 //GET ALL DOC
 const getAllDocotrsController = async (req, res) => {
   try {
-    const doctors = await find({ status: "approved" });
+    const doctors = await doctorModel.find({ status: "approved" });
     res.status(200).send({
       success: true,
       message: "Docots Lists Fetched Successfully",
@@ -185,7 +185,7 @@ const bookeAppointmnetController = async (req, res) => {
     req.body.status = "pending";
     const newAppointment = new appointmentModel(req.body);
     await newAppointment.save();
-    const user = await findOne({ _id: req.body.doctorInfo.userId });
+    const user = await userModel.findOne({ _id: req.body.doctorInfo.userId });
     user.notifcation.push({
       type: "New-appointment-request",
       message: `A nEw Appointment Request from ${req.body.userInfo.name}`,
@@ -215,7 +215,7 @@ const bookingAvailabilityController = async (req, res) => {
       .toISOString();
     const toTime = moment(req.body.time, "HH:mm").add(1, "hours").toISOString();
     const doctorId = req.body.doctorId;
-    const appointments = await _find({
+    const appointments = await appointmentModel.find({
       doctorId,
       date,
       time: {
@@ -246,7 +246,7 @@ const bookingAvailabilityController = async (req, res) => {
 
 const userAppointmentsController = async (req, res) => {
   try {
-    const appointments = await _find({
+    const appointments = await appointmentModel.find({
       userId: req.body.userId,
     });
     res.status(200).send({
@@ -264,7 +264,7 @@ const userAppointmentsController = async (req, res) => {
   }
 };
 
-export default {
+module.exports = {
   loginController,
   registerController,
   authController,

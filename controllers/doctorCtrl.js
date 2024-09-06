@@ -3,7 +3,7 @@ const doctorModel = require("../models/doctorModel");
 const userModel = require("../models/userModels");
 const getDoctorInfoController = async (req, res) => {
   try {
-    const doctor = await findOne({ userId: req.body.userId });
+    const doctor = await doctorModel.findOne({ userId: req.body.userId });
     res.status(200).send({
       success: true,
       message: "doctor data fetch success",
@@ -22,7 +22,7 @@ const getDoctorInfoController = async (req, res) => {
 // update doc profile
 const updateProfileController = async (req, res) => {
   try {
-    const doctor = await findOneAndUpdate(
+    const doctor = await doctorModel.findOneAndUpdate(
       { userId: req.body.userId },
       req.body
     );
@@ -44,7 +44,7 @@ const updateProfileController = async (req, res) => {
 //get single docotor
 const getDoctorByIdController = async (req, res) => {
   try {
-    const doctor = await findOne({ _id: req.body.doctorId });
+    const doctor = await doctorModel.findOne({ _id: req.body.doctorId });
     res.status(200).send({
       success: true,
       message: "Sigle Doc Info Fetched",
@@ -62,8 +62,8 @@ const getDoctorByIdController = async (req, res) => {
 
 const doctorAppointmentsController = async (req, res) => {
   try {
-    const doctor = await findOne({ userId: req.body.userId });
-    const appointments = await find({
+    const doctor = await doctorModel.findOne({ userId: req.body.userId });
+    const appointments = await appointmentModel.find({
       doctorId: doctor._id,
     });
     res.status(200).send({
@@ -84,11 +84,11 @@ const doctorAppointmentsController = async (req, res) => {
 const updateStatusController = async (req, res) => {
   try {
     const { appointmentsId, status } = req.body;
-    const appointments = await findByIdAndUpdate(
+    const appointments = await appointmentModel.findByIdAndUpdate(
       appointmentsId,
       { status }
     );
-    const user = await _findOne({ _id: appointments.userId });
+    const user = await userModel.findOne({ _id: appointments.userId });
     const notifcation = user.notifcation;
     notifcation.push({
       type: "status-updated",
@@ -110,7 +110,7 @@ const updateStatusController = async (req, res) => {
   }
 };
 
-export default {
+module.exports = {
   getDoctorInfoController,
   updateProfileController,
   getDoctorByIdController,
