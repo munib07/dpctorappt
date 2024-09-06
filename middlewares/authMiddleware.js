@@ -1,9 +1,9 @@
-import { verify } from "jsonwebtoken";
+const JWT = require("jsonwebtoken");
 
 export default async (req, res, next) => {
   try {
     const token = req.headers["authorization"].split(" ")[1];
-    verify(token, process.env.JWT_SECRET, (err, decode) => {
+    JWT.verify(token, process.env.JWT_SECRET, (err, decode) => {
       if (err) {
         return res.status(200).send({
           message: "Auth Fialed",

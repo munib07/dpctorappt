@@ -1,6 +1,6 @@
-import { find, findByIdAndUpdate } from "../models/appointmentModel";
-import { findOne, findOneAndUpdate } from "../models/doctorModel";
-import { findOne as _findOne } from "../models/userModels";
+const appointmentModel = require("../models/appointmentModel");
+const doctorModel = require("../models/doctorModel");
+const userModel = require("../models/userModels");
 const getDoctorInfoController = async (req, res) => {
   try {
     const doctor = await findOne({ userId: req.body.userId });

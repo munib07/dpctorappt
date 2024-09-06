@@ -1,11 +1,20 @@
-import { Router } from "express";
-import {
-  loginController, registerController, authController, applyDoctorController, getAllNotificationController, deleteAllNotificationController, getAllDocotrsController, bookeAppointmnetController, bookingAvailabilityController, userAppointmentsController,
-} from "../controllers/userCtrl";
-import authMiddleware from "../middlewares/authMiddleware";
+const express = require("express");
+const {
+  loginController,
+  registerController,
+  authController,
+  applyDoctorController,
+  getAllNotificationController,
+  deleteAllNotificationController,
+  getAllDocotrsController,
+  bookeAppointmnetController,
+  bookingAvailabilityController,
+  userAppointmentsController,
+} = require("../controllers/userCtrl");
+const authMiddleware = require("../middlewares/authMiddleware");
 
 //router onject
-const router = Router();
+const router = express.Router();
 
 //routes
 //LOGIN || POST
@@ -49,4 +58,4 @@ router.post(
 //Appointments List
 router.get("/user-appointments", authMiddleware, userAppointmentsController);
 
-export default router;
+module.exports = router;

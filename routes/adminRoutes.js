@@ -1,9 +1,12 @@
-import { Router } from "express";
-import { getAllUsersController, getAllDoctorsController, changeAccountStatusController } from "../controllers/adminCtrl";
+const express = require("express");
+const {
+  getAllUsersController,
+  getAllDoctorsController,
+  changeAccountStatusController,
+} = require("../controllers/adminCtrl");
+const authMiddleware = require("../middlewares/authMiddleware");
 
-import { authMiddleware } from "../middlewares/authMiddleware";
-
-const router = Router();
+const router = express.Router();
 
 //GET METHOD || USERS
 router.get("/getAllUsers", authMiddleware, getAllUsersController);
@@ -18,4 +21,4 @@ router.post(
   changeAccountStatusController
 );
 
-export default router;
+module.exports = router;

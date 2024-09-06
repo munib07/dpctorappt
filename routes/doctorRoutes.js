@@ -1,10 +1,13 @@
-import { Router } from "express";
-import {
-  getDoctorInfoController, updateProfileController, getDoctorByIdController, doctorAppointmentsController, updateStatusController,
-} from "../controllers/doctorCtrl";
-
-import authMiddleware from "../middlewares/authMiddleware";
-const router = Router();
+const express = require("express");
+const {
+  getDoctorInfoController,
+  updateProfileController,
+  getDoctorByIdController,
+  doctorAppointmentsController,
+  updateStatusController,
+} = require("../controllers/doctorCtrl");
+const authMiddleware = require("../middlewares/authMiddleware");
+const router = express.Router();
 
 //POST SINGLE DOC INFO
 router.post("/getDoctorInfo", authMiddleware, getDoctorInfoController);
@@ -25,4 +28,4 @@ router.get(
 //POST Update Status
 router.post("/update-status", authMiddleware, updateStatusController);
 
-export default router;
+module.exports = router;

@@ -1,5 +1,5 @@
-import { find, findByIdAndUpdate } from "../models/doctorModel";
-import { find as _find, findOne } from "../models/userModels";
+const doctorModel = require("../models/doctorModel");
+const userModel = require("../models/userModels");
 
 const getAllUsersController = async (req, res) => {
   try {

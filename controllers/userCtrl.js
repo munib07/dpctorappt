@@ -1,9 +1,9 @@
-import userModel, { findOne, findById, findByIdAndUpdate } from "../models/userModels";
-import { genSalt, hash, compare } from "bcryptjs";
-import { sign } from "jsonwebtoken";
-import doctorModel, { find } from "../models/doctorModel";
-import appointmentModel, { find as _find } from "../models/appointmentModel";
-import moment from "moment";
+const userModel = require("../models/userModels");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const doctorModel = require("../models/doctorModel");
+const appointmentModel = require("../models/appointmentModel");
+const moment = require("moment");
 //register callback
 const registerController = async (req, res) => {
   try {

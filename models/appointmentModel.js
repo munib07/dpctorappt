@@ -1,6 +1,6 @@
-import { Schema, model } from "mongoose";
+const mongoose = require("mongoose");
 
-const appointmentSchema = new Schema(
+const appointmentSchema = new mongoose.schema(
   {
     userId: {
       type: String,
@@ -35,6 +35,6 @@ const appointmentSchema = new Schema(
   { timestamps: true }
 );
 
-const appointmentModel = model("appointments", appointmentSchema);
+const appointmentModel = mongoose.model("appointments", appointmentSchema);
 
 export default appointmentModel;

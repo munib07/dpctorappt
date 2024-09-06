@@ -8,7 +8,7 @@ const connectDB = require("./config/db.js");
 dotenv.config();
 
 //mongodb connection
-//connectDB();
+connectDB();
 
 //rest object
 const app = express();
@@ -23,9 +23,9 @@ app.use(bodyParser.json());
 app.use(morgan("dev"));
 
 //routes
-//app.use("/api/v1/user", require("./routes/userRoutes"));
-//app.use("/api/v1/admin", require("./routes/adminRoutes"));
-//app.use("/api/v1/doctor", require("./routes/doctorRoutes"));
+app.use("/api/v1/user", require("./routes/userRoutes"));
+app.use("/api/v1/admin", require("./routes/adminRoutes"));
+app.use("/api/v1/doctor", require("./routes/doctorRoutes"));
 
 //port
 const port = process.env.PORT || 1137;
